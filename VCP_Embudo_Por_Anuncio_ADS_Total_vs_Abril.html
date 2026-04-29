@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>VCP — Embudo y cualificación por anuncio · Total vs Abril</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',-apple-system,sans-serif; background:#FAF8F4; color:#0F0F0F; -webkit-font-smoothing:antialiased; }
+.page { max-width:1700px; margin:0 auto; padding:60px 40px; }
+
+.header { margin-bottom:48px; }
+.header .tag { font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#888; font-weight:600; margin-bottom:16px; }
+.header h1 { font-family:'Fraunces',Georgia,serif; font-size:clamp(40px,6vw,68px); font-weight:500; line-height:1; letter-spacing:-.02em; margin-bottom:20px; }
+.header h1 em { font-style:italic; color:#B8462E; }
+.header .sub { font-size:18px; color:#6E6A60; line-height:1.5; max-width:780px; margin-bottom:40px; }
+
+/* KPIs DUAL */
+.kpis-wrap { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px; }
+.kpi-block { background:#F0EDE6; border:1px solid #DDD8CD; padding:24px 28px; }
+.kpi-block.abril { background:#FAF6F0; border-color:#E5C9B8; }
+.kpi-block .titulo { font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#0F0F0F; font-weight:700; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid #DDD8CD; }
+.kpi-block .titulo span { color:#888; font-weight:500; }
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:14px; }
+.kpi-cell .l { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#888; font-weight:600; margin-bottom:5px; }
+.kpi-cell .v { font-family:'Fraunces',serif; font-size:24px; font-weight:500; line-height:1; }
+.kpi-cell .s { font-size:10px; color:#888; margin-top:3px; }
+
+/* Doble atribución */
+.atrib-wrap { margin-top:14px; padding-top:14px; border-top:1px dashed #DDD8CD; }
+.atrib-titulo { font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:#888; font-weight:700; margin-bottom:8px; }
+.atrib-row { display:grid; grid-template-columns:1fr auto auto; gap:12px; align-items:center; padding:6px 0; font-size:12px; }
+.atrib-label { color:#0F0F0F; }
+.atrib-label small { color:#888; font-size:10px; display:block; margin-top:2px; line-height:1.3; }
+.atrib-vt { font-weight:600; color:#0F0F0F; min-width:70px; text-align:right; }
+.atrib-cc { font-family:'Fraunces',serif; font-weight:600; min-width:90px; text-align:right; font-size:14px; }
+.atrib-row.principal { background:#FFF; padding:8px 12px; border-radius:2px; border:1px solid #DDD8CD; }
+.atrib-row.secundaria { opacity:.7; padding-left:12px; }
+
+.aviso { background:#FFF8E1; border:1px solid #FDE68A; border-left:4px solid #B8862E; padding:18px 22px; margin-bottom:32px; font-size:13px; line-height:1.6; }
+.aviso strong { color:#B8862E; }
+.aviso code { background:rgba(0,0,0,.06); padding:1px 6px; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:11px; }
+
+.leyenda { display:flex; gap:18px; flex-wrap:wrap; margin-bottom:32px; padding:14px 20px; background:#F0EDE6; border:1px solid #DDD8CD; }
+.leyenda-item { display:flex; align-items:center; gap:8px; }
+.dot { width:12px; height:12px; border-radius:2px; }
+.leyenda-item span { font-size:12px; font-weight:600; }
+
+.section-title { font-family:'Fraunces',serif; font-size:clamp(26px,3.5vw,36px); font-weight:500; margin-bottom:8px; line-height:1.1; margin-top:24px; }
+.section-title em { color:#B8462E; font-style:italic; }
+.section-sub { font-size:14px; color:#6E6A60; margin-bottom:24px; max-width:860px; line-height:1.5; }
+
+.tabla-wrap { overflow-x:auto; border:1px solid #DDD8CD; }
+table { width:100%; border-collapse:collapse; font-size:11px; min-width:1900px; }
+thead tr { background:#0F0F0F; }
+thead th { padding:10px 6px; text-align:center; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:white; font-weight:600; vertical-align:bottom; }
+thead th.section-h { background:#3A3A3A !important; border-right:2px solid #555; }
+thead th.section-h-abr { background:#0F0F0F !important; }
+thead th.cap-h { min-width:78px; }
+tbody tr { border-bottom:1px solid #DDD8CD; }
+tbody tr:nth-child(even) { background:#F5F2EE; }
+tbody td { padding:9px 6px; vertical-align:middle; }
+tbody td:first-child {
+  font-family:'JetBrains Mono',monospace; font-weight:500; line-height:1.3;
+  word-break:break-word; max-width:280px; font-size:10px;
+}
+tbody td.num { text-align:center; font-weight:600; font-feature-settings:'tnum'; font-size:11px; }
+.cell { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.cbar-outer { width:100%; height:4px; background:#E5E7EB; border-radius:1px; overflow:hidden; }
+.cbar-inner { height:100%; border-radius:1px; }
+.cpct { font-size:12px; font-weight:700; }
+.csm { font-size:9px; color:#888; }
+
+.nota { background:#F0EDE6; border-left:4px solid #B8462E; padding:20px 24px; margin-top:32px; }
+.nota .nl { font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:#B8462E; font-weight:700; margin-bottom:8px; }
+.nota p { font-size:14px; line-height:1.6; }
+.nota p+p { margin-top:8px; }
+.nota code { background:rgba(0,0,0,.06); padding:1px 5px; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:12px; }
+
+footer { background:#0F0F0F; color:white; text-align:center; padding:40px; margin-top:80px; }
+footer .fb { font-family:'Fraunces',serif; font-size:16px; margin-bottom:4px; }
+footer p { font-size:12px; opacity:.5; }
+
+/* === MOVIL TABLET (≤ 900px) === */
+@media (max-width:900px) {
+  .page { padding:36px 20px; }
+  .header { margin-bottom:36px; }
+  .header h1 { font-size:36px; }
+  .header .sub { font-size:15px; }
+
+  /* KPIs apilados */
+  .kpis-wrap { grid-template-columns:1fr; gap:16px; margin-bottom:20px; }
+  .kpi-block { padding:20px 22px; }
+  .kpi-block .titulo { font-size:10px; margin-bottom:14px; padding-bottom:10px; }
+  .kpi-grid { grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px; }
+  .kpi-cell .l { font-size:9px; }
+  .kpi-cell .v { font-size:20px; }
+  .kpi-cell .s { font-size:9px; }
+
+  /* Atribuciones — apilar label arriba, números abajo */
+  .atrib-wrap { margin-top:12px; padding-top:12px; }
+  .atrib-titulo { font-size:9px; margin-bottom:6px; }
+  .atrib-row {
+    grid-template-columns:1fr;
+    gap:6px;
+    padding:8px 0;
+    font-size:12px;
+  }
+  .atrib-row.principal { padding:10px 12px; }
+  .atrib-row.secundaria { padding:8px 0 8px 12px; border-left:2px solid #DDD8CD; }
+  .atrib-label { line-height:1.4; }
+  .atrib-label small { font-size:10px; margin-top:3px; }
+  .atrib-row .atrib-vt,
+  .atrib-row .atrib-cc {
+    display:inline-block;
+    text-align:left;
+    min-width:0;
+    margin-right:14px;
+  }
+  .atrib-row .atrib-cc { font-size:15px; color:#B8462E; }
+  /* Wrapper para los dos numeros juntos en una fila */
+  .atrib-row::after { content:""; }
+
+  .aviso { padding:14px 16px; font-size:12px; line-height:1.55; }
+
+  .leyenda { padding:14px 16px; gap:8px; flex-direction:column; align-items:flex-start; }
+  .leyenda-item span { font-size:11px; }
+
+  .section-title { font-size:24px; }
+  .section-sub { font-size:13px; margin-bottom:20px; }
+
+  /* TABLA → TARJETAS */
+  .tabla-wrap { border:none; overflow:visible; }
+  table { min-width:0; font-size:11px; display:block; }
+  thead { display:none; }
+  tbody, tr { display:block; }
+  tbody tr {
+    background:#F5F2EE;
+    border:1px solid #E5E0D5;
+    border-radius:3px;
+    margin-bottom:14px;
+    padding:14px;
+  }
+  tbody tr:nth-child(even) { background:#F5F2EE; }
+  tbody tr:last-child { background:#0F0F0F; color:white; padding:18px; }
+  tbody tr:last-child td { color:white; border-color:#444; }
+  tbody tr:last-child td::before { color:rgba(255,255,255,0.6) !important; }
+
+  tbody td {
+    display:grid;
+    grid-template-columns:140px 1fr;
+    align-items:center;
+    padding:6px 0;
+    border-bottom:1px solid #E5E0D5;
+    font-size:12px;
+  }
+  tbody td:last-child { border-bottom:none; }
+  tbody td:first-child {
+    font-weight:700;
+    font-size:13px;
+    padding-bottom:10px;
+    border-bottom:2px solid #0F0F0F;
+    margin-bottom:8px;
+    grid-template-columns:1fr;
+    word-break:break-word;
+    line-height:1.35;
+  }
+  tbody td:first-child::before { content:""; display:none; }
+  tbody td::before {
+    color:#6E6A60;
+    font-weight:600;
+    font-size:10px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    line-height:1.3;
+  }
+  /* Total */
+  tbody td:nth-child(2)::before { content:"TOTAL · Optins"; }
+  tbody td:nth-child(3)::before { content:"TOTAL · Respuestas"; }
+  tbody td:nth-child(4)::before { content:"TOTAL · Agendas"; }
+  tbody td:nth-child(5)::before { content:"TOTAL · Showed"; }
+  tbody td:nth-child(6)::before { content:"TOTAL · Ventas"; }
+  tbody td:nth-child(7)::before { content:"TOTAL · Cash Collected"; }
+  tbody td:nth-child(8)::before { content:"TOTAL · Menos $500"; color:#B83A2E !important; }
+  tbody td:nth-child(9)::before { content:"TOTAL · $500 – $1k"; color:#B8862E !important; }
+  tbody td:nth-child(10)::before { content:"TOTAL · $1k – $3k"; color:#4A7C59 !important; }
+  tbody td:nth-child(11)::before { content:"TOTAL · Más $3k"; color:#2E7D32 !important; }
+  /* Separador antes de Abril */
+  tbody td:nth-child(12) {
+    margin-top:14px;
+    padding-top:14px;
+    border-top:2px dashed #B8462E;
+    border-left:none !important;
+  }
+  tbody td:nth-child(12)::before { content:"ABRIL · Optins"; color:#B8462E !important; font-weight:700; }
+  tbody td:nth-child(13)::before { content:"ABRIL · Respuestas"; }
+  tbody td:nth-child(14)::before { content:"ABRIL · Agendas"; }
+  tbody td:nth-child(15)::before { content:"ABRIL · Showed"; }
+  tbody td:nth-child(16)::before { content:"ABRIL · Ventas"; }
+  tbody td:nth-child(17)::before { content:"ABRIL · Cash Collected"; }
+  tbody td:nth-child(18)::before { content:"ABRIL · Menos $500"; color:#B83A2E !important; }
+  tbody td:nth-child(19)::before { content:"ABRIL · $500 – $1k"; color:#B8862E !important; }
+  tbody td:nth-child(20)::before { content:"ABRIL · $1k – $3k"; color:#4A7C59 !important; }
+  tbody td:nth-child(21)::before { content:"ABRIL · Más $3k"; color:#2E7D32 !important; }
+
+  .cell { flex-direction:row; align-items:center; gap:8px; justify-content:flex-start; }
+  .cbar-outer { width:60px; flex-shrink:0; height:6px; }
+  .cpct { font-size:13px; }
+  .csm { font-size:10px; margin-left:auto; }
+
+  /* Sin actividad en Abril */
+  tbody td[colspan="4"] {
+    grid-template-columns:1fr;
+    padding:14px 0 6px;
+    margin-top:12px;
+    border-top:2px dashed #B8462E;
+    text-align:left !important;
+    font-style:italic;
+    color:#888;
+    border-left:none !important;
+  }
+  tbody td[colspan="4"]::before {
+    content:"ABRIL";
+    color:#B8462E !important;
+    font-weight:700;
+    margin-bottom:4px;
+    display:block;
+  }
+
+  .nota { padding:18px 18px; }
+  .nota p { font-size:13px; }
+
+  footer { padding:32px 20px; }
+  footer p { font-size:11px; }
+}
+
+/* === MOVIL ESTRECHO (≤ 480px) === */
+@media (max-width:480px) {
+  .page { padding:28px 14px; }
+  .header h1 { font-size:30px; }
+  .header .sub { font-size:14px; }
+
+  .kpi-block { padding:16px 16px; }
+  .kpi-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
+  .kpi-cell .v { font-size:18px; }
+
+  .atrib-row.principal { padding:10px; }
+  .atrib-row.principal .atrib-cc { font-size:14px; }
+  .atrib-label { font-size:11px; }
+  .atrib-label small { font-size:10px; }
+
+  .section-title { font-size:22px; }
+
+  /* Tarjetas tabla más compactas */
+  tbody tr { padding:12px; margin-bottom:12px; }
+  tbody td {
+    grid-template-columns:115px 1fr;
+    font-size:12px;
+    padding:5px 0;
+  }
+  tbody td:first-child { font-size:12px; }
+  tbody td::before { font-size:9px; }
+  .cbar-outer { width:50px; }
+  .cpct { font-size:12px; }
+}
+
+/* === EXTRA ESTRECHO (≤ 360px) === */
+@media (max-width:360px) {
+  .page { padding:24px 12px; }
+  .header h1 { font-size:26px; }
+  tbody td {
+    grid-template-columns:1fr;
+    gap:3px;
+    padding:6px 0;
+  }
+  tbody td::before { margin-bottom:2px; }
+  .cell { flex-direction:row; }
+  .cbar-outer { width:70px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <div class="tag">VCP · Análisis del canal ADS por anuncio · Total acumulado vs Abril 2026</div>
+  <h1>Embudo y cualificación<br>por <em>anuncio</em>.</h1>
+  <p class="sub">Análisis del rendimiento individual de cada anuncio del canal pagado (Facebook / Instagram). Cada anuncio se identifica por su UTM exacta tal como se etiqueta en GHL. La tabla compara el comportamiento acumulado del periodo Enero – Abril con el comportamiento únicamente del último mes, para identificar qué anuncios siguen activos, cuáles han cambiado su perfil de audiencia y cuáles han dejado de generar volumen.</p>
+</div>
+
+<div class="kpis-wrap">
+  <div class="kpi-block">
+    <div class="titulo">Total acumulado <span>· Enero – Abril 2026</span></div>
+    <div class="kpi-grid">
+      <div class="kpi-cell"><div class="l">Optins</div><div class="v">17,310</div></div>
+      <div class="kpi-cell"><div class="l">Respuestas</div><div class="v">3,114</div><div class="s">18% del total</div></div>
+      <div class="kpi-cell"><div class="l">Agendas</div><div class="v">1,871</div></div>
+      <div class="kpi-cell"><div class="l">Showed</div><div class="v">691</div></div>
+    </div>
+    <div class="atrib-wrap">
+      <div class="atrib-titulo">Ventas atribuidas — dos métodos</div>
+      <div class="atrib-row principal">
+        <div class="atrib-label">
+          <strong>Por origen UTM</strong>
+          <small>Lead que entró por anuncio Meta y compró (cualquier calendario de cierre)</small>
+        </div>
+        <div class="atrib-vt">221 ventas</div>
+        <div class="atrib-cc">$368,461</div>
+      </div>
+      <div class="atrib-row secundaria">
+        <div class="atrib-label">
+          Por calendario de cierre
+          <small>Lead cuyo último appointment fue en Leads VSL Closing</small>
+        </div>
+        <div class="atrib-vt">169 ventas</div>
+        <div class="atrib-cc">$223,862</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-block abril">
+    <div class="titulo">Solo Abril 2026 <span>· último mes cerrado</span></div>
+    <div class="kpi-grid">
+      <div class="kpi-cell"><div class="l">Optins</div><div class="v">1,689</div></div>
+      <div class="kpi-cell"><div class="l">Respuestas</div><div class="v">399</div><div class="s">24% del total</div></div>
+      <div class="kpi-cell"><div class="l">Agendas</div><div class="v">321</div></div>
+      <div class="kpi-cell"><div class="l">Showed</div><div class="v">113</div></div>
+    </div>
+    <div class="atrib-wrap">
+      <div class="atrib-titulo">Ventas atribuidas — dos métodos</div>
+      <div class="atrib-row principal">
+        <div class="atrib-label">
+          <strong>Por origen UTM</strong>
+          <small>Lead que entró por anuncio Meta y compró en Abril (cualquier calendario de cierre)</small>
+        </div>
+        <div class="atrib-vt">40 ventas</div>
+        <div class="atrib-cc">$62,467</div>
+      </div>
+      <div class="atrib-row secundaria">
+        <div class="atrib-label">
+          Por calendario de cierre
+          <small>Lead con appointment de Abril en Leads VSL Closing</small>
+        </div>
+        <div class="atrib-vt">37 ventas</div>
+        <div class="atrib-cc">$53,350</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="aviso">
+  <strong>Sobre las dos atribuciones de ventas.</strong> El KPI "por origen UTM" cuenta toda venta de un lead que entró originalmente por un anuncio, independientemente del calendario donde finalmente cerró (puede haber acabado agendando por consultoría, podcast, etc.). El KPI "por calendario de cierre" solo cuenta ventas cuyo último appointment fue en Leads VSL Closing. La diferencia ($144,599 en el acumulado, $9,117 en Abril) representa leads que entraron por ADS pero terminaron cerrando por otra vía. <strong>La tabla detallada usa atribución por UTM</strong>, ya que es la única forma de asignar cada venta a un anuncio específico.
+</div>
+
+<div class="leyenda">
+  <div class="leyenda-item"><div class="dot" style="background:#B83A2E"></div><span>Menos de $500</span></div>
+  <div class="leyenda-item"><div class="dot" style="background:#B8862E"></div><span>$500 – $1.000</span></div>
+  <div class="leyenda-item"><div class="dot" style="background:#4A7C59"></div><span>$1.000 – $3.000</span></div>
+  <div class="leyenda-item"><div class="dot" style="background:#2E7D32"></div><span>Más de $3.000</span></div>
+</div>
+
+<h2 class="section-title">Comportamiento <em>por anuncio</em></h2>
+<p class="section-sub">Tabla ordenada por volumen total de optins. Los anuncios sin actividad en Abril aparecen marcados; en muchos casos son creativos pausados en Meta antes del último mes. Los anuncios con muy pocos optins en Abril tienen muestras pequeñas — la columna del acumulado ofrece una base más representativa para ellos.</p>
+
+<div class="tabla-wrap">
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2" style="vertical-align:bottom;text-align:left">UTM Content (anuncio)</th>
+      <th colspan="10" class="section-h" style="text-align:center;border-bottom:1px solid #555">Total acumulado · Enero – Abril 2026</th>
+      <th colspan="10" class="section-h-abr" style="text-align:center;border-bottom:1px solid #555;border-left:2px solid #555">Solo Abril 2026</th>
+    </tr>
+    <tr>
+      <th class="section-h">Optins</th>
+      <th class="section-h">Resp</th>
+      <th class="section-h">Ag</th>
+      <th class="section-h">Sh</th>
+      <th class="section-h">Vt</th>
+      <th class="section-h">CC</th>
+      <th class="cap-h section-h" style="background:#B83A2E !important"><$500</th>
+      <th class="cap-h section-h" style="background:#B8862E !important">$500-1k</th>
+      <th class="cap-h section-h" style="background:#4A7C59 !important">$1-3k</th>
+      <th class="cap-h section-h" style="background:#2E7D32 !important;border-right:2px solid #555">>$3k</th>
+      <th class="section-h-abr" style="border-left:2px solid #555">Optins</th>
+      <th class="section-h-abr">Resp</th>
+      <th class="section-h-abr">Ag</th>
+      <th class="section-h-abr">Sh</th>
+      <th class="section-h-abr">Vt</th>
+      <th class="section-h-abr">CC</th>
+      <th class="cap-h section-h-abr" style="background:#B83A2E !important"><$500</th>
+      <th class="cap-h section-h-abr" style="background:#B8862E !important">$500-1k</th>
+      <th class="cap-h section-h-abr" style="background:#4A7C59 !important">$1-3k</th>
+      <th class="cap-h section-h-abr" style="background:#2E7D32 !important">>$3k</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+  <td title="USA Broad Spanish*03 | BOOKING | AD | Video:ad 2">USA Broad Spanish*03 | BOOKING | AD | Video:ad 2</td>
+  <td class="num">4,306</td>
+  <td class="num">599</td>
+  <td class="num">429</td>
+  <td class="num">143</td>
+  <td class="num">39</td>
+  <td class="num">$69,060</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:42%;background:#B83A2E"></div></div><div class="cpct">42%</div><div class="csm">251</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:30%;background:#B8862E"></div></div><div class="cpct">30%</div><div class="csm">178</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:17%;background:#4A7C59"></div></div><div class="cpct">17%</div><div class="csm">102</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:11%;background:#2E7D32"></div></div><div class="cpct">11%</div><div class="csm">68</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">216</td>
+  <td class="num">33</td>
+  <td class="num">21</td>
+  <td class="num">8</td>
+  <td class="num">1</td>
+  <td class="num">$797</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:45%;background:#B83A2E"></div></div><div class="cpct">45%</div><div class="csm">15</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:33%;background:#B8862E"></div></div><div class="cpct">33%</div><div class="csm">11</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:18%;background:#4A7C59"></div></div><div class="cpct">18%</div><div class="csm">6</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:3%;background:#2E7D32"></div></div><div class="cpct">3%</div><div class="csm">1</div></div></td>
+</tr><tr>
+  <td title="USA Broad Spanish*Reel Gladys 6 - New flujo">USA Broad Spanish*Reel Gladys 6 - New flujo</td>
+  <td class="num">3,150</td>
+  <td class="num">296</td>
+  <td class="num">2</td>
+  <td class="num">1</td>
+  <td class="num">3</td>
+  <td class="num">$4,545</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:52%;background:#B83A2E"></div></div><div class="cpct">52%</div><div class="csm">154</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:23%;background:#B8862E"></div></div><div class="cpct">23%</div><div class="csm">68</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:18%;background:#4A7C59"></div></div><div class="cpct">18%</div><div class="csm">53</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:7%;background:#2E7D32"></div></div><div class="cpct">7%</div><div class="csm">21</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="USA Broad Spanish*02 | BOOKING | AD | Video:VCP 3 HOOK 1 30-40">USA Broad Spanish*02 | BOOKING | AD | Video:VCP 3 HOOK 1 30-40</td>
+  <td class="num">3,124</td>
+  <td class="num">434</td>
+  <td class="num">301</td>
+  <td class="num">87</td>
+  <td class="num">24</td>
+  <td class="num">$39,505</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:42%;background:#B83A2E"></div></div><div class="cpct">42%</div><div class="csm">182</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:32%;background:#B8862E"></div></div><div class="cpct">32%</div><div class="csm">139</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:17%;background:#4A7C59"></div></div><div class="cpct">17%</div><div class="csm">72</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:9%;background:#2E7D32"></div></div><div class="cpct">9%</div><div class="csm">41</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">662</td>
+  <td class="num">75</td>
+  <td class="num">56</td>
+  <td class="num">8</td>
+  <td class="num">4</td>
+  <td class="num">$5,077</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:45%;background:#B83A2E"></div></div><div class="cpct">45%</div><div class="csm">34</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:27%;background:#B8862E"></div></div><div class="cpct">27%</div><div class="csm">20</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:16%;background:#4A7C59"></div></div><div class="cpct">16%</div><div class="csm">12</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:12%;background:#2E7D32"></div></div><div class="cpct">12%</div><div class="csm">9</div></div></td>
+</tr><tr>
+  <td title="01 | OPT IN | Video | reel ia 1">01 | OPT IN | Video | reel ia 1</td>
+  <td class="num">1,554</td>
+  <td class="num">287</td>
+  <td class="num">157</td>
+  <td class="num">60</td>
+  <td class="num">34</td>
+  <td class="num">$53,218</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:34%;background:#B83A2E"></div></div><div class="cpct">34%</div><div class="csm">98</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:32%;background:#B8862E"></div></div><div class="cpct">32%</div><div class="csm">92</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:21%;background:#4A7C59"></div></div><div class="cpct">21%</div><div class="csm">59</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:13%;background:#2E7D32"></div></div><div class="cpct">13%</div><div class="csm">38</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">94</td>
+  <td class="num">19</td>
+  <td class="num">14</td>
+  <td class="num">5</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:42%;background:#B83A2E"></div></div><div class="cpct">42%</div><div class="csm">8</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:26%;background:#B8862E"></div></div><div class="cpct">26%</div><div class="csm">5</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:16%;background:#4A7C59"></div></div><div class="cpct">16%</div><div class="csm">3</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:16%;background:#2E7D32"></div></div><div class="cpct">16%</div><div class="csm">3</div></div></td>
+</tr><tr>
+  <td title="01 | BOOKING | AD | FB TOFU EDITADO 1">01 | BOOKING | AD | FB TOFU EDITADO 1</td>
+  <td class="num">1,114</td>
+  <td class="num">375</td>
+  <td class="num">197</td>
+  <td class="num">80</td>
+  <td class="num">21</td>
+  <td class="num">$38,833</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:35%;background:#B83A2E"></div></div><div class="cpct">35%</div><div class="csm">131</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:29%;background:#B8862E"></div></div><div class="cpct">29%</div><div class="csm">107</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:23%;background:#4A7C59"></div></div><div class="cpct">23%</div><div class="csm">86</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:14%;background:#2E7D32"></div></div><div class="cpct">14%</div><div class="csm">51</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">26</td>
+  <td class="num">26</td>
+  <td class="num">24</td>
+  <td class="num">10</td>
+  <td class="num">2</td>
+  <td class="num">$1,594</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:38%;background:#B83A2E"></div></div><div class="cpct">38%</div><div class="csm">10</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:31%;background:#B8862E"></div></div><div class="cpct">31%</div><div class="csm">8</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:12%;background:#4A7C59"></div></div><div class="cpct">12%</div><div class="csm">3</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:19%;background:#2E7D32"></div></div><div class="cpct">19%</div><div class="csm">5</div></div></td>
+</tr><tr>
+  <td title="01 | Reel Gladys 6 - New flujo">01 | Reel Gladys 6 - New flujo</td>
+  <td class="num">1,081</td>
+  <td class="num">146</td>
+  <td class="num">65</td>
+  <td class="num">19</td>
+  <td class="num">11</td>
+  <td class="num">$13,147</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:45%;background:#B83A2E"></div></div><div class="cpct">45%</div><div class="csm">66</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:33%;background:#B8862E"></div></div><div class="cpct">33%</div><div class="csm">48</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:16%;background:#4A7C59"></div></div><div class="cpct">16%</div><div class="csm">24</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:5%;background:#2E7D32"></div></div><div class="cpct">5%</div><div class="csm">8</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">79</td>
+  <td class="num">8</td>
+  <td class="num">5</td>
+  <td class="num">2</td>
+  <td class="num">2</td>
+  <td class="num">$2,396</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:62%;background:#B83A2E"></div></div><div class="cpct">62%</div><div class="csm">5</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:38%;background:#B8862E"></div></div><div class="cpct">38%</div><div class="csm">3</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+</tr><tr>
+  <td title="01 | OPTIN | USA | ADV | ANDRO08 | BOOKING | AD | Video: ad 8 vcp 40 - 40 años">01 | OPTIN | USA | ADV | ANDRO08 | BOOKING | AD | Video: ad 8 vcp 40 - 40 años</td>
+  <td class="num">1,017</td>
+  <td class="num">203</td>
+  <td class="num">133</td>
+  <td class="num">47</td>
+  <td class="num">16</td>
+  <td class="num">$27,831</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:38%;background:#B83A2E"></div></div><div class="cpct">38%</div><div class="csm">78</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:29%;background:#B8862E"></div></div><div class="cpct">29%</div><div class="csm">58</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:24%;background:#4A7C59"></div></div><div class="cpct">24%</div><div class="csm">48</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:9%;background:#2E7D32"></div></div><div class="cpct">9%</div><div class="csm">19</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">231</td>
+  <td class="num">48</td>
+  <td class="num">38</td>
+  <td class="num">12</td>
+  <td class="num">3</td>
+  <td class="num">$3,193</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:48%;background:#B83A2E"></div></div><div class="cpct">48%</div><div class="csm">23</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:23%;background:#B8862E"></div></div><div class="cpct">23%</div><div class="csm">11</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:21%;background:#4A7C59"></div></div><div class="cpct">21%</div><div class="csm">10</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:8%;background:#2E7D32"></div></div><div class="cpct">8%</div><div class="csm">4</div></div></td>
+</tr><tr>
+  <td title="02 | Optin completo |  USA Broad Spanish* | Intereses (Amazon, ecomerse)03 | BOOKING | AD | Video:ad 2">02 | Optin completo |  USA Broad Spanish* | Intereses (Amazon, ecomerse)03 | BOOKING | ...</td>
+  <td class="num">385</td>
+  <td class="num">80</td>
+  <td class="num">59</td>
+  <td class="num">22</td>
+  <td class="num">6</td>
+  <td class="num">$8,152</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:26%;background:#B83A2E"></div></div><div class="cpct">26%</div><div class="csm">21</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:39%;background:#B8862E"></div></div><div class="cpct">39%</div><div class="csm">31</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:20%;background:#4A7C59"></div></div><div class="cpct">20%</div><div class="csm">16</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:15%;background:#2E7D32"></div></div><div class="cpct">15%</div><div class="csm">12</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">78</td>
+  <td class="num">12</td>
+  <td class="num">10</td>
+  <td class="num">4</td>
+  <td class="num">1</td>
+  <td class="num">$290</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:17%;background:#B83A2E"></div></div><div class="cpct">17%</div><div class="csm">2</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#B8862E"></div></div><div class="cpct">50%</div><div class="csm">6</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:8%;background:#4A7C59"></div></div><div class="cpct">8%</div><div class="csm">1</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:25%;background:#2E7D32"></div></div><div class="cpct">25%</div><div class="csm">3</div></div></td>
+</tr><tr>
+  <td title="01 | OPTIN | USA | ADV | ANDRO02 | BOOKING | AD | Video: VCP AD 2 SI LLEGARA A USA SIN NADA">01 | OPTIN | USA | ADV | ANDRO02 | BOOKING | AD | Video: VCP AD 2 SI LLEGARA A USA SIN ...</td>
+  <td class="num">189</td>
+  <td class="num">43</td>
+  <td class="num">21</td>
+  <td class="num">9</td>
+  <td class="num">3</td>
+  <td class="num">$4,309</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:37%;background:#B83A2E"></div></div><div class="cpct">37%</div><div class="csm">16</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:30%;background:#B8862E"></div></div><div class="cpct">30%</div><div class="csm">13</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:28%;background:#4A7C59"></div></div><div class="cpct">28%</div><div class="csm">12</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:5%;background:#2E7D32"></div></div><div class="cpct">5%</div><div class="csm">2</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">24</td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1</td>
+  <td class="num">1</td>
+  <td class="num">$470</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:67%;background:#B83A2E"></div></div><div class="cpct">67%</div><div class="csm">2</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:33%;background:#B8862E"></div></div><div class="cpct">33%</div><div class="csm">1</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+</tr><tr>
+  <td title="01 | OPTIN | USA | ADV | ANDRO05 | BOOKING | AD | Video: ad 5 vcp compre con tarjeta">01 | OPTIN | USA | ADV | ANDRO05 | BOOKING | AD | Video: ad 5 vcp compre con tarjeta</td>
+  <td class="num">188</td>
+  <td class="num">41</td>
+  <td class="num">31</td>
+  <td class="num">10</td>
+  <td class="num">5</td>
+  <td class="num">$9,305</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:24%;background:#B83A2E"></div></div><div class="cpct">24%</div><div class="csm">10</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:32%;background:#B8862E"></div></div><div class="cpct">32%</div><div class="csm">13</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:24%;background:#4A7C59"></div></div><div class="cpct">24%</div><div class="csm">10</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:20%;background:#2E7D32"></div></div><div class="cpct">20%</div><div class="csm">8</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">19</td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">2</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:67%;background:#B8862E"></div></div><div class="cpct">67%</div><div class="csm">2</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:33%;background:#2E7D32"></div></div><div class="cpct">33%</div><div class="csm">1</div></div></td>
+</tr><tr>
+  <td title="02 | BOOKING | AD | Video: IMG_7851">02 | BOOKING | AD | Video: IMG_7851</td>
+  <td class="num">148</td>
+  <td class="num">82</td>
+  <td class="num">45</td>
+  <td class="num">16</td>
+  <td class="num">6</td>
+  <td class="num">$11,505</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:33%;background:#B83A2E"></div></div><div class="cpct">33%</div><div class="csm">27</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:26%;background:#B8862E"></div></div><div class="cpct">26%</div><div class="csm">21</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:26%;background:#4A7C59"></div></div><div class="cpct">26%</div><div class="csm">21</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:16%;background:#2E7D32"></div></div><div class="cpct">16%</div><div class="csm">13</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">18</td>
+  <td class="num">17</td>
+  <td class="num">13</td>
+  <td class="num">5</td>
+  <td class="num">2</td>
+  <td class="num">$5,798</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:35%;background:#B83A2E"></div></div><div class="cpct">35%</div><div class="csm">6</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:24%;background:#B8862E"></div></div><div class="cpct">24%</div><div class="csm">4</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:24%;background:#4A7C59"></div></div><div class="cpct">24%</div><div class="csm">4</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:18%;background:#2E7D32"></div></div><div class="cpct">18%</div><div class="csm">3</div></div></td>
+</tr><tr>
+  <td title="02 | Optin completo |  USA Broad Spanish* | Intereses (Amazon, ecomerse)02 | BOOKING | AD | Video:VCP 3 HOOK 1 30-40">02 | Optin completo |  USA Broad Spanish* | Intereses (Amazon, ecomerse)02 | BOOKING | ...</td>
+  <td class="num">137</td>
+  <td class="num">23</td>
+  <td class="num">16</td>
+  <td class="num">5</td>
+  <td class="num">1</td>
+  <td class="num">$470</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:52%;background:#B83A2E"></div></div><div class="cpct">52%</div><div class="csm">12</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:35%;background:#B8862E"></div></div><div class="cpct">35%</div><div class="csm">8</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:4%;background:#4A7C59"></div></div><div class="cpct">4%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:9%;background:#2E7D32"></div></div><div class="cpct">9%</div><div class="csm">2</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">45</td>
+  <td class="num">7</td>
+  <td class="num">4</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:71%;background:#B83A2E"></div></div><div class="cpct">71%</div><div class="csm">5</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:14%;background:#B8862E"></div></div><div class="cpct">14%</div><div class="csm">1</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:14%;background:#2E7D32"></div></div><div class="cpct">14%</div><div class="csm">1</div></div></td>
+</tr><tr>
+  <td title="07 | BOOKING | AD | Video: ad 1 - Copia">07 | BOOKING | AD | Video: ad 1 - Copia</td>
+  <td class="num">125</td>
+  <td class="num">116</td>
+  <td class="num">103</td>
+  <td class="num">48</td>
+  <td class="num">15</td>
+  <td class="num">$24,077</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:39%;background:#B83A2E"></div></div><div class="cpct">39%</div><div class="csm">45</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:29%;background:#B8862E"></div></div><div class="cpct">29%</div><div class="csm">34</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:21%;background:#4A7C59"></div></div><div class="cpct">21%</div><div class="csm">24</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:11%;background:#2E7D32"></div></div><div class="cpct">11%</div><div class="csm">13</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">32</td>
+  <td class="num">31</td>
+  <td class="num">27</td>
+  <td class="num">10</td>
+  <td class="num">3</td>
+  <td class="num">$3,776</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:35%;background:#B83A2E"></div></div><div class="cpct">35%</div><div class="csm">11</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:35%;background:#B8862E"></div></div><div class="cpct">35%</div><div class="csm">11</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:23%;background:#4A7C59"></div></div><div class="cpct">23%</div><div class="csm">7</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:6%;background:#2E7D32"></div></div><div class="cpct">6%</div><div class="csm">2</div></div></td>
+</tr><tr>
+  <td title="01 | OPTIN | USA Broad Spanish*05 | BOOKING | AD | Video: ad 5 vcp compre con tarjeta">01 | OPTIN | USA Broad Spanish*05 | BOOKING | AD | Video: ad 5 vcp compre con tarjeta</td>
+  <td class="num">125</td>
+  <td class="num">19</td>
+  <td class="num">11</td>
+  <td class="num">5</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:42%;background:#B83A2E"></div></div><div class="cpct">42%</div><div class="csm">8</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:26%;background:#B8862E"></div></div><div class="cpct">26%</div><div class="csm">5</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:26%;background:#4A7C59"></div></div><div class="cpct">26%</div><div class="csm">5</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:5%;background:#2E7D32"></div></div><div class="cpct">5%</div><div class="csm">1</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">8</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+</tr><tr>
+  <td title="03 | BOOKING | AD | Video:IMG_7849 (mono)">03 | BOOKING | AD | Video:IMG_7849 (mono)</td>
+  <td class="num">103</td>
+  <td class="num">32</td>
+  <td class="num">17</td>
+  <td class="num">6</td>
+  <td class="num">2</td>
+  <td class="num">$5,798</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:31%;background:#B83A2E"></div></div><div class="cpct">31%</div><div class="csm">10</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:28%;background:#B8862E"></div></div><div class="cpct">28%</div><div class="csm">9</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:28%;background:#4A7C59"></div></div><div class="cpct">28%</div><div class="csm">9</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:12%;background:#2E7D32"></div></div><div class="cpct">12%</div><div class="csm">4</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">6</td>
+  <td class="num">5</td>
+  <td class="num">4</td>
+  <td class="num">2</td>
+  <td class="num">1</td>
+  <td class="num">$2,899</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:60%;background:#B83A2E"></div></div><div class="cpct">60%</div><div class="csm">3</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:20%;background:#B8862E"></div></div><div class="cpct">20%</div><div class="csm">1</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:20%;background:#4A7C59"></div></div><div class="cpct">20%</div><div class="csm">1</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+</tr><tr>
+  <td title="01 | OPTIN | USA | ADV | ANDRO01 | BOOKING | AD | Video: AD 1 VCP TRABAJO 10HRS CORREGIDO">01 | OPTIN | USA | ADV | ANDRO01 | BOOKING | AD | Video: AD 1 VCP TRABAJO 10HRS CORREGIDO</td>
+  <td class="num">81</td>
+  <td class="num">20</td>
+  <td class="num">16</td>
+  <td class="num">6</td>
+  <td class="num">2</td>
+  <td class="num">$1,594</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:25%;background:#B83A2E"></div></div><div class="cpct">25%</div><div class="csm">5</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:55%;background:#B8862E"></div></div><div class="cpct">55%</div><div class="csm">11</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:10%;background:#4A7C59"></div></div><div class="cpct">10%</div><div class="csm">2</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:10%;background:#2E7D32"></div></div><div class="cpct">10%</div><div class="csm">2</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">32</td>
+  <td class="num">10</td>
+  <td class="num">8</td>
+  <td class="num">4</td>
+  <td class="num">1</td>
+  <td class="num">$797</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:20%;background:#B83A2E"></div></div><div class="cpct">20%</div><div class="csm">2</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#B8862E"></div></div><div class="cpct">50%</div><div class="csm">5</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:20%;background:#4A7C59"></div></div><div class="cpct">20%</div><div class="csm">2</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:10%;background:#2E7D32"></div></div><div class="cpct">10%</div><div class="csm">1</div></div></td>
+</tr><tr>
+  <td title="08 | BOOKING | AD | Video: Pizarra - Copia">08 | BOOKING | AD | Video: Pizarra - Copia</td>
+  <td class="num">67</td>
+  <td class="num">58</td>
+  <td class="num">50</td>
+  <td class="num">23</td>
+  <td class="num">4</td>
+  <td class="num">$5,259</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:40%;background:#B83A2E"></div></div><div class="cpct">40%</div><div class="csm">23</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:26%;background:#B8862E"></div></div><div class="cpct">26%</div><div class="csm">15</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:16%;background:#4A7C59"></div></div><div class="cpct">16%</div><div class="csm">9</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:19%;background:#2E7D32"></div></div><div class="cpct">19%</div><div class="csm">11</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">27</td>
+  <td class="num">23</td>
+  <td class="num">21</td>
+  <td class="num">9</td>
+  <td class="num">2</td>
+  <td class="num">$3,745</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:35%;background:#B83A2E"></div></div><div class="cpct">35%</div><div class="csm">8</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:35%;background:#B8862E"></div></div><div class="cpct">35%</div><div class="csm">8</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:17%;background:#4A7C59"></div></div><div class="cpct">17%</div><div class="csm">4</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:13%;background:#2E7D32"></div></div><div class="cpct">13%</div><div class="csm">3</div></div></td>
+</tr><tr>
+  <td title="06 | BOOKING | AD | Video:VCP 3 HOOK 1 30-40 - Copia">06 | BOOKING | AD | Video:VCP 3 HOOK 1 30-40 - Copia</td>
+  <td class="num">62</td>
+  <td class="num">58</td>
+  <td class="num">48</td>
+  <td class="num">21</td>
+  <td class="num">9</td>
+  <td class="num">$11,317</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:36%;background:#B83A2E"></div></div><div class="cpct">36%</div><div class="csm">21</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:29%;background:#B8862E"></div></div><div class="cpct">29%</div><div class="csm">17</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:22%;background:#4A7C59"></div></div><div class="cpct">22%</div><div class="csm">13</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:12%;background:#2E7D32"></div></div><div class="cpct">12%</div><div class="csm">7</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">33</td>
+  <td class="num">30</td>
+  <td class="num">25</td>
+  <td class="num">9</td>
+  <td class="num">1</td>
+  <td class="num">$797</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:40%;background:#B83A2E"></div></div><div class="cpct">40%</div><div class="csm">12</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:30%;background:#B8862E"></div></div><div class="cpct">30%</div><div class="csm">9</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:23%;background:#4A7C59"></div></div><div class="cpct">23%</div><div class="csm">7</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:7%;background:#2E7D32"></div></div><div class="cpct">7%</div><div class="csm">2</div></div></td>
+</tr><tr>
+  <td title="06 | BOOKING | AD | Video:VCP 3 HOOK 1 30-40">06 | BOOKING | AD | Video:VCP 3 HOOK 1 30-40</td>
+  <td class="num">53</td>
+  <td class="num">52</td>
+  <td class="num">45</td>
+  <td class="num">15</td>
+  <td class="num">2</td>
+  <td class="num">$3,696</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:31%;background:#B83A2E"></div></div><div class="cpct">31%</div><div class="csm">16</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:38%;background:#B8862E"></div></div><div class="cpct">38%</div><div class="csm">20</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:17%;background:#4A7C59"></div></div><div class="cpct">17%</div><div class="csm">9</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:13%;background:#2E7D32"></div></div><div class="cpct">13%</div><div class="csm">7</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">15</td>
+  <td class="num">15</td>
+  <td class="num">15</td>
+  <td class="num">4</td>
+  <td class="num">2</td>
+  <td class="num">$3,696</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:40%;background:#B83A2E"></div></div><div class="cpct">40%</div><div class="csm">6</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:33%;background:#B8862E"></div></div><div class="cpct">33%</div><div class="csm">5</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:13%;background:#4A7C59"></div></div><div class="cpct">13%</div><div class="csm">2</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:13%;background:#2E7D32"></div></div><div class="cpct">13%</div><div class="csm">2</div></div></td>
+</tr><tr>
+  <td title="01 | OPTIN | USA | ADV | ANDRO07 | BOOKING | AD | Video: ad7 vcp perdiste antes de empezar">01 | OPTIN | USA | ADV | ANDRO07 | BOOKING | AD | Video: ad7 vcp perdiste antes de empezar</td>
+  <td class="num">46</td>
+  <td class="num">11</td>
+  <td class="num">8</td>
+  <td class="num">5</td>
+  <td class="num">2</td>
+  <td class="num">$6,097</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:9%;background:#B83A2E"></div></div><div class="cpct">9%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:27%;background:#B8862E"></div></div><div class="cpct">27%</div><div class="csm">3</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:55%;background:#4A7C59"></div></div><div class="cpct">55%</div><div class="csm">6</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:9%;background:#2E7D32"></div></div><div class="cpct">9%</div><div class="csm">1</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">4</td>
+  <td class="num">2</td>
+  <td class="num">2</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#B83A2E"></div></div><div class="cpct">50%</div><div class="csm">1</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#4A7C59"></div></div><div class="cpct">50%</div><div class="csm">1</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+</tr><tr>
+  <td title="04 | BOOKING | AD | Carrusel1 - Copia">04 | BOOKING | AD | Carrusel1 - Copia</td>
+  <td class="num">40</td>
+  <td class="num">35</td>
+  <td class="num">33</td>
+  <td class="num">18</td>
+  <td class="num">7</td>
+  <td class="num">$9,828</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:17%;background:#B83A2E"></div></div><div class="cpct">17%</div><div class="csm">6</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:37%;background:#B8862E"></div></div><div class="cpct">37%</div><div class="csm">13</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:37%;background:#4A7C59"></div></div><div class="cpct">37%</div><div class="csm">13</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:9%;background:#2E7D32"></div></div><div class="cpct">9%</div><div class="csm">3</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">14</td>
+  <td class="num">14</td>
+  <td class="num">13</td>
+  <td class="num">9</td>
+  <td class="num">3</td>
+  <td class="num">$4,865</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:14%;background:#B83A2E"></div></div><div class="cpct">14%</div><div class="csm">2</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:29%;background:#B8862E"></div></div><div class="cpct">29%</div><div class="csm">4</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#4A7C59"></div></div><div class="cpct">50%</div><div class="csm">7</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:7%;background:#2E7D32"></div></div><div class="cpct">7%</div><div class="csm">1</div></div></td>
+</tr><tr>
+  <td title="07 | BOOKING | AD | Video: ad 1">07 | BOOKING | AD | Video: ad 1</td>
+  <td class="num">33</td>
+  <td class="num">31</td>
+  <td class="num">28</td>
+  <td class="num">15</td>
+  <td class="num">3</td>
+  <td class="num">$7,996</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:29%;background:#B83A2E"></div></div><div class="cpct">29%</div><div class="csm">9</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:29%;background:#B8862E"></div></div><div class="cpct">29%</div><div class="csm">9</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:19%;background:#4A7C59"></div></div><div class="cpct">19%</div><div class="csm">6</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:23%;background:#2E7D32"></div></div><div class="cpct">23%</div><div class="csm">7</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">7</td>
+  <td class="num">6</td>
+  <td class="num">6</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:17%;background:#B83A2E"></div></div><div class="cpct">17%</div><div class="csm">1</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:33%;background:#B8862E"></div></div><div class="cpct">33%</div><div class="csm">2</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:33%;background:#4A7C59"></div></div><div class="cpct">33%</div><div class="csm">2</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:17%;background:#2E7D32"></div></div><div class="cpct">17%</div><div class="csm">1</div></div></td>
+</tr><tr>
+  <td title="02 | Optin completo |  USA Broad Spanish* | Intereses (Amazon, ecomerse)05 | BOOKING | AD | Video: ad 5 vcp compre con tarjeta">02 | Optin completo |  USA Broad Spanish* | Intereses (Amazon, ecomerse)05 | BOOKING | ...</td>
+  <td class="num">31</td>
+  <td class="num">9</td>
+  <td class="num">6</td>
+  <td class="num">6</td>
+  <td class="num">2</td>
+  <td class="num">$5,798</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:11%;background:#B83A2E"></div></div><div class="cpct">11%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:44%;background:#B8862E"></div></div><div class="cpct">44%</div><div class="csm">4</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:22%;background:#4A7C59"></div></div><div class="cpct">22%</div><div class="csm">2</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:22%;background:#2E7D32"></div></div><div class="cpct">22%</div><div class="csm">2</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="{{ad.name}}">{{ad.name}}</td>
+  <td class="num">27</td>
+  <td class="num">6</td>
+  <td class="num">5</td>
+  <td class="num">3</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:67%;background:#B83A2E"></div></div><div class="cpct">67%</div><div class="csm">4</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:17%;background:#B8862E"></div></div><div class="cpct">17%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:17%;background:#4A7C59"></div></div><div class="cpct">17%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">3</td>
+  <td class="num">2</td>
+  <td class="num">2</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:100%;background:#B83A2E"></div></div><div class="cpct">100%</div><div class="csm">2</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+</tr><tr>
+  <td title="01 | OPTIN | USA Broad Spanish*04 | BOOKING | AD | Video: ad3 perder 5k">01 | OPTIN | USA Broad Spanish*04 | BOOKING | AD | Video: ad3 perder 5k</td>
+  <td class="num">17</td>
+  <td class="num">2</td>
+  <td class="num">2</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#B8862E"></div></div><div class="cpct">50%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#4A7C59"></div></div><div class="cpct">50%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">4</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+</tr><tr>
+  <td title="04 | BOOKING | AD | Carrusel1">04 | BOOKING | AD | Carrusel1</td>
+  <td class="num">15</td>
+  <td class="num">14</td>
+  <td class="num">10</td>
+  <td class="num">6</td>
+  <td class="num">2</td>
+  <td class="num">$3,425</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:21%;background:#B83A2E"></div></div><div class="cpct">21%</div><div class="csm">3</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:29%;background:#B8862E"></div></div><div class="cpct">29%</div><div class="csm">4</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:36%;background:#4A7C59"></div></div><div class="cpct">36%</div><div class="csm">5</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:14%;background:#2E7D32"></div></div><div class="cpct">14%</div><div class="csm">2</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">3</td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">2</td>
+  <td class="num">1</td>
+  <td class="num">$797</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:33%;background:#B8862E"></div></div><div class="cpct">33%</div><div class="csm">1</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:67%;background:#4A7C59"></div></div><div class="cpct">67%</div><div class="csm">2</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+</tr><tr>
+  <td title="01 | OPTIN | USA | ADV | ANDRO03 | BOOKING | AD | Video: ad 6 vcp no entres">01 | OPTIN | USA | ADV | ANDRO03 | BOOKING | AD | Video: ad 6 vcp no entres</td>
+  <td class="num">15</td>
+  <td class="num">6</td>
+  <td class="num">5</td>
+  <td class="num">3</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#B83A2E"></div></div><div class="cpct">50%</div><div class="csm">3</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#B8862E"></div></div><div class="cpct">50%</div><div class="csm">3</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="05 | BOOKING | AD | Carrusel2">05 | BOOKING | AD | Carrusel2</td>
+  <td class="num">14</td>
+  <td class="num">13</td>
+  <td class="num">12</td>
+  <td class="num">8</td>
+  <td class="num">1</td>
+  <td class="num">$797</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:54%;background:#B83A2E"></div></div><div class="cpct">54%</div><div class="csm">7</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:31%;background:#B8862E"></div></div><div class="cpct">31%</div><div class="csm">4</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:8%;background:#4A7C59"></div></div><div class="cpct">8%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:8%;background:#2E7D32"></div></div><div class="cpct">8%</div><div class="csm">1</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">7</td>
+  <td class="num">6</td>
+  <td class="num">6</td>
+  <td class="num">3</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:83%;background:#B83A2E"></div></div><div class="cpct">83%</div><div class="csm">5</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:17%;background:#B8862E"></div></div><div class="cpct">17%</div><div class="csm">1</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+</tr><tr>
+  <td title="01 | OPT IN | Video | reel ia 2">01 | OPT IN | Video | reel ia 2</td>
+  <td class="num">14</td>
+  <td class="num">2</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#B83A2E"></div></div><div class="cpct">50%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#4A7C59"></div></div><div class="cpct">50%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="05 | BOOKING | AD | Carrusel2 - Copia">05 | BOOKING | AD | Carrusel2 - Copia</td>
+  <td class="num">8</td>
+  <td class="num">7</td>
+  <td class="num">7</td>
+  <td class="num">2</td>
+  <td class="num">1</td>
+  <td class="num">$2,899</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:29%;background:#B83A2E"></div></div><div class="cpct">29%</div><div class="csm">2</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:43%;background:#B8862E"></div></div><div class="cpct">43%</div><div class="csm">3</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:29%;background:#4A7C59"></div></div><div class="cpct">29%</div><div class="csm">2</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="03 | Optin completo |  USA Broad Spanish* | ADV - 2 IA02 | BOOKING | AD | Video:VCP 3 HOOK 1 30-40 - Copia">03 | Optin completo |  USA Broad Spanish* | ADV - 2 IA02 | BOOKING | AD | Video:VCP 3 H...</td>
+  <td class="num">8</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="01 | Optin completo |  USA Broad Spanish* | ADV02 | BOOKING | AD | Video:VCP 3 HOOK 1 30-40 - Copia">01 | Optin completo |  USA Broad Spanish* | ADV02 | BOOKING | AD | Video:VCP 3 HOOK 1 3...</td>
+  <td class="num">8</td>
+  <td class="num">1</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:100%;background:#B8862E"></div></div><div class="cpct">100%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="03 | Optin completo |  USA Broad Spanish* | ADV - 2 IA03 | BOOKING | AD | Video:ad 2 - Copia">03 | Optin completo |  USA Broad Spanish* | ADV - 2 IA03 | BOOKING | AD | Video:ad 2 - ...</td>
+  <td class="num">7</td>
+  <td class="num">3</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:33%;background:#B83A2E"></div></div><div class="cpct">33%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:67%;background:#4A7C59"></div></div><div class="cpct">67%</div><div class="csm">2</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="01 | OPTIN | USA | ADV | ANDRO04 | BOOKING | AD | Video: ad3 perder 5k">01 | OPTIN | USA | ADV | ANDRO04 | BOOKING | AD | Video: ad3 perder 5k</td>
+  <td class="num">4</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">1</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+</tr><tr>
+  <td title="01 | BOOKING | AD | Reel Gladys">01 | BOOKING | AD | Reel Gladys</td>
+  <td class="num">4</td>
+  <td class="num">3</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:100%;background:#4A7C59"></div></div><div class="cpct">100%</div><div class="csm">3</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="08 | BOOKING | AD | Video: Pizarra">08 | BOOKING | AD | Video: Pizarra</td>
+  <td class="num">3</td>
+  <td class="num">3</td>
+  <td class="num">3</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:67%;background:#B83A2E"></div></div><div class="cpct">67%</div><div class="csm">2</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:33%;background:#B8862E"></div></div><div class="cpct">33%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="120239728272080302">120239728272080302</td>
+  <td class="num">2</td>
+  <td class="num">2</td>
+  <td class="num">2</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#B83A2E"></div></div><div class="cpct">50%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:50%;background:#4A7C59"></div></div><div class="cpct">50%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">1</td>
+  <td class="num">1</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td><td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:100%;background:#4A7C59"></div></div><div class="cpct">100%</div><div class="csm">1</div></div></td><td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+</tr><tr>
+  <td title="01 | Optin completo |  USA Broad Spanish* | ADV03 | BOOKING | AD | Video:ad 2 - Copia">01 | Optin completo |  USA Broad Spanish* | ADV03 | BOOKING | AD | Video:ad 2 - Copia</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="120232796836120302">120232796836120302</td>
+  <td class="num">1</td>
+  <td class="num">1</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:100%;background:#B83A2E"></div></div><div class="cpct">100%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="120241373601800425">120241373601800425</td>
+  <td class="num">1</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"><div class="cbar-inner" style="width:100%;background:#4A7C59"></div></div><div class="cpct">100%</div><div class="csm">1</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="120241300687000425">120241300687000425</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr><tr>
+  <td title="120237147310260302">120237147310260302</td>
+  <td class="num">1</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">0</td>
+  <td class="num">—</td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td><div class="cell"><div class="cbar-outer"></div><div class="cpct" style="color:#ccc">—</div><div class="csm">0</div></div></td>
+  <td class="num" style="border-left:2px solid #DDD8CD">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td colspan="4" style="text-align:center;color:#aaa;font-style:italic;border-left:2px solid #DDD8CD">Sin actividad en Abril</td>
+</tr>
+    <tr style="background:#0F0F0F;color:white;font-weight:700">
+  <td>TOTAL ADS (atribución por UTM)</td>
+  <td class="num">17,310</td>
+  <td class="num">3,114</td>
+  <td class="num">1,871</td>
+  <td class="num">691</td>
+  <td class="num">221</td>
+  <td class="num">$368,461</td>
+  <td class="num"><b>39%</b><br><span style="opacity:.6;font-weight:400">1216</span></td>
+  <td class="num"><b>30%</b><br><span style="opacity:.6;font-weight:400">934</span></td>
+  <td class="num"><b>20%</b><br><span style="opacity:.6;font-weight:400">620</span></td>
+  <td class="num"><b>11%</b><br><span style="opacity:.6;font-weight:400">344</span></td>
+  <td class="num" style="border-left:2px solid #555">1,689</td>
+  <td class="num">399</td>
+  <td class="num">321</td>
+  <td class="num">113</td>
+  <td class="num">40</td>
+  <td class="num">$62,467</td>
+  <td class="num"><b>41%</b><br><span style="opacity:.6;font-weight:400">163</span></td>
+  <td class="num"><b>30%</b><br><span style="opacity:.6;font-weight:400">119</span></td>
+  <td class="num"><b>19%</b><br><span style="opacity:.6;font-weight:400">75</span></td>
+  <td class="num"><b>11%</b><br><span style="opacity:.6;font-weight:400">42</span></td>
+</tr>
+  </tbody>
+</table>
+</div>
+
+<div class="nota">
+  <div class="nl">Lectura de los datos</div>
+  <p>Cada fila representa un anuncio individual identificado por su UTM completa. La sección izquierda muestra el rendimiento acumulado de los cuatro meses; la derecha, únicamente Abril.</p>
+  <p><strong>Cómo identificar señales:</strong> los anuncios que mantienen ratios de cualificación similares en ambos cortes son creativos estables. Los que muestran cambios significativos entre las dos secciones indican un cambio en el perfil de audiencia que están atrayendo. Los anuncios sin actividad en Abril están pausados o ya no generan optins.</p>
+  <p><strong>Sobre las dos atribuciones de ventas en los KPIs:</strong> los datos por anuncio en la tabla usan atribución <strong>por UTM</strong> porque es la única forma de saber qué anuncio originó cada venta. Por eso, el total de la columna "CC" (UTM) es mayor que el "CC por calendario de cierre" — la diferencia son leads que entraron por ADS pero acabaron cerrando por otro canal (consultoría, podcast, etc.).</p>
+  <p><strong>Atribución de ventas:</strong> un lead se atribuye al anuncio del que llegó originalmente. Si compró, el CC se imputa a ese anuncio independientemente del calendario de cierre. Las ventas de Abril cuentan únicamente las cerradas dentro del mes.</p>
+  <p><strong>Exclusiones:</strong> <code>link_in_bio</code>, <code>guiawholesale</code>, <code>testimoniohector</code>, <code>millonarioamazon</code>, <code>cursocompraventa</code> (no son anuncios). Incluidos: <code>{{ad.name}}</code> (placeholder vacío) e IDs numéricos de Meta (anuncios sin nombre asignado).</p>
+</div>
+
+</div>
+<footer>
+  <div class="fb">Sales Hacking × VCP</div>
+  <p>Análisis de embudo y cualificación financiera por anuncio · Canal ADS · Enero – Abril 2026</p>
+</footer>
+</body>
+</html>
